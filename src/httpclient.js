@@ -192,6 +192,19 @@
   module.exports = {
     global_cookies: global_cookies,
     get_cookies: get_cookies,
+      get_cookie: function (name) {
+          var cookie_map = {};
+          all_cookies.forEach(function(ck){
+              var v = ck.split(' ')[0];
+              var kv = v.trim().split('=');
+              if(kv[1]!=';') {
+                  var value = kv[1];
+                  if(value[value.length - 1] == ';') value = value.substr(0, value.length -1);
+                  cookie_map[kv[0]] = value;
+              }
+          });
+          return cookie_map[name]
+      },
     update_cookies: update_cookies,
     get_cookies_string: get_cookies_string,
     request: http_request,
