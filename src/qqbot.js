@@ -415,12 +415,10 @@
       return this.api.long_poll(this.auth, (function(_this) {
         return function(ret, e) {
           if (_this.started) {
-            _this.handle_poll_responce(ret, e);
-            if (callback) {
               process.nextTick(function () {
-                  callback(ret, e);
+                  _this.handle_poll_responce(ret, e);
+                  callback && callback(ret, e);
               })
-            }
           }
           return _this.started;
         };
