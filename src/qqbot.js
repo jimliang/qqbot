@@ -168,7 +168,7 @@
               if(callback) return callback(true, 'ok');
             }
           } else {
-            if(callback) return callback(false, 'retcode isnt 0');
+            if(callback) return callback(false, 'get_buddy_list fail(retcode: '+ ret.retcode +')');
           }
         }
       });
@@ -196,6 +196,7 @@
         return function(ret, e) {
           if (e) {
             log.error(e);
+            return
           }
           if (ret.retcode === 0) {
             _this.dgroup_info = ret.result;
@@ -280,9 +281,13 @@
         }
       };
 
-      this.update_buddy_list(function(ret) {
+      this.update_buddy_list(function(ret, e) {
+        if(e) {
+          log.error(e)
+           return callback(false)
+        }
         actions.buddy = [1, ret];
-        return check();
+        check();
       });
 
       this.update_group_list((function(_this) {
@@ -412,7 +417,9 @@
           if (_this.started) {
             _this.handle_poll_responce(ret, e);
             if (callback) {
-              callback(ret, e);
+              process.nextTick(function () {
+                  callback(ret, e);
+              })
             }
           }
           return _this.started;
